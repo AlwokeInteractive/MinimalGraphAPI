@@ -1,5 +1,9 @@
 <?php
 
+	/**
+	 * Find this API at https://github.com/AlwokeInteractive/MinimalGraphAPI/
+	 * @author Kevin Gregull for Alwoke Interactive
+	 */
 	class AlwokeFB
 	{
 		private $appID="";
