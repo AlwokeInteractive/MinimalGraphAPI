@@ -56,3 +56,31 @@ foreach ($albums->data as $album)
   }
 }
 ```
+
+
+#### Custom Login Flow
+```php
+// Step 1: Redirect the User to the Facebook Login
+$fb=new AlwokeFB("AppID","AppSecret");
+echo '<a href="'.$fb->GetLoginURL("http://yourdomain.com/path_to_login").'">FB Login</a>';
+```
+
+```php
+// Step 2: Handle the returning User from the Facebook Login
+if (isset($_GET["error_reason"]))
+{
+  // User denied Permissions
+  echo $_GET["error_reason"];
+  die();
+}
+
+if (isset($_GET["code"]))
+{
+  $fb=new AlwokeFB("AppID","AppSecret");
+  $params=array();
+  $params["redirect_uri"]="http://yourdomain.com/path_to_login"; // Same as above in Step1 for Request verification
+  $params["code"]=$_GET["code"];
+  $data=$fb->API("/v2.11/oauth/access_token","GET",$params);
+  echo $data->access_token; // This is the actual User Token
+}
+```
