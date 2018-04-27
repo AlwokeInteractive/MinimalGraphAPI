@@ -89,7 +89,16 @@
 		{
 			// Parse Parameters
 			$params["method"]=$method;
-			$params["access_token"]=$this->GetToken();
+			
+			if (preg_match("/oauth/",$url))
+			{
+				$params["client_id"]=$this->appID;
+				$params["client_secret"]=$this->appSecret;
+			}
+			else
+			{
+				$params["access_token"]=$this->GetToken();
+			}
 			
 			$curl=curl_init();
 			$options=array(CURLOPT_URL=>(($raw)?"":"https://graph.facebook.com").$url,CURLOPT_POSTFIELDS=>http_build_query($params,null,'&'),CURLOPT_CUSTOMREQUEST=>"POST",CURLOPT_RETURNTRANSFER=>true,CURLOPT_ENCODING=>"",CURLOPT_MAXREDIRS=>10,CURLOPT_TIMEOUT=>30,CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,CURLOPT_PROXYTYPE=>$this->proxyType,CURLOPT_PROXY=>$this->proxyHost,CURLOPT_PROXYAUTH=>$this->proxyAuth);
@@ -98,16 +107,7 @@
 			$error=curl_error($curl);
 			if ($error=="")
 			{
-				if (preg_match("/oauth/",$url))
-				{
-					$text=str_replace('=','":"',$text);
-					$text=str_replace('&','","',$text);
-					return json_decode('{"'.$text.'"}');
-				}
-				else
-				{
-					return json_decode($text);
-				}
+				return json_decode($text);
 			}
 			else
 			{
