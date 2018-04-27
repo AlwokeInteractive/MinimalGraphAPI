@@ -1,6 +1,6 @@
 <?php
 
-  class AlwokeFB
+	class AlwokeFB
 	{
 		private $appID="";
 		private $appSecret="";
@@ -24,6 +24,24 @@
 		public function GetAppToken()
 		{
 			return $this->appID."|".$this->appSecret;	
+		}
+		
+		/**
+		 * Returns a Login URL that you can redirect the User to
+		 * @param string $redirect The URL to which Facebook will redirect the User after Login
+		 * @param string $scope The permissions that you want to access. (Seperated with ",")
+		 * @return string The Facebook OAuth Login URL
+		 */
+		public function GetLoginURL($redirect,$scope=null)
+		{
+			if ($scope===null)
+			{
+				return "https://www.facebook.com/v2.12/dialog/oauth?client_id=".$this->appID."&redirect_uri=".urlencode($redirect);
+			}
+			else
+			{
+				return "https://www.facebook.com/v2.12/dialog/oauth?client_id=".$this->appID."&redirect_uri=".urlencode($redirect)."&scope=".urlencode($scope);
+			}
 		}
 		
 		/**
